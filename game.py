@@ -20,6 +20,14 @@ class Game:
 
         self.score = 0
 
+        self.buttons = pygame.sprite.Group()
+        Button((screen_size[0] // 4, 300), (screen_size[0] // 2, 80), "Resume", (0, 0, 0), COLORS[2], COLORS[4],
+               60, Options.resume.value, self.buttons)
+        Button((screen_size[0] // 4, 400), (screen_size[0] // 2, 80), "Restart", (0, 0, 0), COLORS[2], COLORS[4],
+               60, Options.restart.value, self.buttons)
+        Button((screen_size[0] // 4, 500), (screen_size[0] // 2, 80), "Quit", (0, 0, 0), COLORS[2], COLORS[4],
+               60, Options.quit.value, self.buttons)
+
     def move_down(self):
         self.coords[1] += 1
         figure = self.current_figure.get_map()
@@ -88,6 +96,13 @@ class Game:
                                     CELL_SIZE, CELL_SIZE)
             self.screen.fill(self.current_figure.get_color(), rect.inflate(-2 * BORER_SIZE, -2 * BORER_SIZE))
 
+        if self.is_paused:
+            font = pygame.font.Font(None, 72)
+            text = font.render("PAUSE", True, COLORS[2])
+            self.screen.blit(text, (screen_size[0] // 2 - text.get_width() // 2, 80))
+            self.buttons.update()
+            self.buttons.draw(self.screen)
+
     def check_horizontal_borders(self, x: int, figure: tuple[tuple[int, int]]) -> bool:
         return all([0 <= x + figure[i][0] < self.field_size[0] for i in range(4)])
 
@@ -98,8 +113,13 @@ class Game:
         if getInput.isKeyDown(pygame.K_ESCAPE):
             self.pause()
         elif getInput.isKeyDown(pygame.K_r):
-            self.__init__(self.screen, (self.field_size[0], self.field_size[1] - OFFSET_Y))
+            self.restart_game()
         if self.is_paused:
+            for el in self.buttons:
+                if el.rect.collidepoint(pygame.mouse.get_pos()):
+                    el.hover()
+                    if any(pygame.mouse.get_pressed()):
+                        eval(f"{OPTION_LIST[el.get_option()]}()")
             return
         if getInput.isKeyDown(pygame.K_LEFT, pygame.K_a):
             self.horizontal_move(-1)
@@ -111,6 +131,9 @@ class Game:
             self.move_down()
         elif getInput.isKeyDown(pygame.K_SPACE):
             self.drop_figure()
+
+    def restart_game(self):
+        self.__init__(self.screen, (self.field_size[0], self.field_size[1] - OFFSET_Y))
 
     def pause(self):
         self.is_paused = not self.is_paused

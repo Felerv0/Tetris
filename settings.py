@@ -5,7 +5,7 @@ from enum import Enum
 COLORS = [(0, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0),
           (0, 255, 0), (255, 128, 0), (0, 128, 255), (255, 0, 255)]
 
-OPTION_LIST = ["terminate", "start_game", "open_settings"]
+OPTION_LIST = ["terminate", "start_game", "open_settings", "self.pause", "self.restart_game"]
 
 FIGURES = [((0, 0), (0, 0), (0, 0), (0, 0)),
            ((0, 0), (1, 0), (0, 1), (1, 1)),
@@ -54,6 +54,8 @@ class Options(Enum):
     quit = 0
     play = 1
     settings = 2
+    resume = 3
+    restart = 4
 
 
 class Color(Enum):
