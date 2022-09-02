@@ -61,3 +61,34 @@ class Button(pygame.sprite.Sprite):
 
     def get_option(self) -> int:
         return self.option
+
+
+class TextObject:
+    def __init__(self, text: str, screen: pygame.surface.Surface, font=None, font_size=72, color=(0, 0, 0)):
+        self.text = text
+        self.screen = screen
+        self.font = font
+        self.font_size = font_size
+        self.color = color
+        self.update_elements()
+
+    def update_elements(self):
+        self.font_element = pygame.font.Font(self.font, self.font_size)
+        self.text_element = self.font_element.render(self.text, True, self.color)
+
+    def get_width(self) -> int:
+        return self.text_element.get_width()
+
+    def get_height(self) -> int:
+        return self.text_element.get_height()
+
+    def change_color(self, color=(0, 0, 0)):
+        self.color = color
+        self.update_elements()
+
+    def change_text(self, text: str):
+        self.text = text
+        self.update_elements()
+
+    def render(self, pos: tuple[int, int]):
+        self.screen.blit(self.text_element, pos)
