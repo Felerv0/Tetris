@@ -3,7 +3,7 @@ import sys
 from settings import game_state, GameState, OPTION_LIST
 
 
-def check_buttons_input(group: pygame.sprite.Group):
+def check_buttons_input(game, group: pygame.sprite.Group):
     for el in group:
         if el.rect.collidepoint(pygame.mouse.get_pos()):
             el.hover()

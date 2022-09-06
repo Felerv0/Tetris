@@ -122,13 +122,10 @@ class Game:
         elif getInput.isKeyDown(pygame.K_r):
             self.restart_game()
         if self.is_paused:
-            for el in self.buttons:
-                if el.rect.collidepoint(pygame.mouse.get_pos()):
-                    el.hover()
-                    if any(pygame.mouse.get_pressed()):
-                        eval(f"{OPTION_LIST[el.get_option()]}()")
+            check_buttons_input(self, self.buttons)
             return
         if self.loss_game:
+            check_buttons_input(self, self.game_over_buttons)
             return
         if getInput.isKeyDown(pygame.K_LEFT, pygame.K_a):
             self.horizontal_move(-1)
@@ -169,13 +166,6 @@ class Menu:
                70, Options.quit.value, self.buttons)
         self.logo = TextObject("TETRIS", self.screen, "assets/fonts/Tetris.ttf", 72, COLORS[self.color])
 
-    def check_input(self):
-        for el in self.buttons:
-            if el.rect.collidepoint(pygame.mouse.get_pos()):
-                el.hover()
-                if any(pygame.mouse.get_pressed()):
-                    eval(f"{OPTION_LIST[el.get_option()]}()")
-
     def change_logo_color(self):
         self.color += 1
         if self.color >= len(COLORS):
@@ -186,7 +176,7 @@ class Menu:
         self.screen.fill((0, 0, 0))
         self.buttons.update()
         self.buttons.draw(self.screen)
-        self.check_input()
+        check_buttons_input(self, self.buttons)
 
         if getInput.check_event(pygame.USEREVENT + 1):
             self.change_logo_color()
